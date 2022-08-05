@@ -1,0 +1,144 @@
+---- Minecraft Crash Report ----
+// My bad.
+
+Time: 7/29/22, 11:12 AM
+Description: Initializing game
+
+java.lang.RuntimeException: Could not execute entrypoint stage 'main' due to errors, provided by 'technicarsenal'!
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.lambda$invoke0$0(EntrypointUtils.java:51)
+	at net.fabricmc.loader.impl.util.ExceptionUtil.gatherExceptions(ExceptionUtil.java:33)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke0(EntrypointUtils.java:49)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke(EntrypointUtils.java:35)
+	at net.fabricmc.loader.impl.game.minecraft.Hooks.startClient(Hooks.java:52)
+	at net.minecraft.client.MinecraftClient.<init>(MinecraftClient.java:509)
+	at net.minecraft.client.main.Main.main(Main.java:179)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:460)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+Caused by: java.lang.NullPointerException: The validated object is null
+	at java.base/java.util.Objects.requireNonNull(Objects.java:334)
+	at org.apache.commons.lang3.Validate.notNull(Validate.java:224)
+	at org.apache.commons.lang3.Validate.notNull(Validate.java:206)
+	at net.minecraft.util.registry.SimpleRegistry.set(SimpleRegistry.java:95)
+	at net.minecraft.util.registry.SimpleRegistry.set(SimpleRegistry.java:88)
+	at net.minecraft.util.registry.SimpleRegistry.add(SimpleRegistry.java:128)
+	at net.minecraft.util.registry.Registry.register(Registry.java:475)
+	at net.minecraft.util.registry.Registry.register(Registry.java:471)
+	at com.theswirlingvoid.technicarsenal.Main.onInitialize(Main.java:43)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke0(EntrypointUtils.java:47)
+	... 8 more
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Render thread
+Stacktrace:
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.lambda$invoke0$0(EntrypointUtils.java:51)
+	at net.fabricmc.loader.impl.util.ExceptionUtil.gatherExceptions(ExceptionUtil.java:33)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke0(EntrypointUtils.java:49)
+	at net.fabricmc.loader.impl.entrypoint.EntrypointUtils.invoke(EntrypointUtils.java:35)
+	at net.fabricmc.loader.impl.game.minecraft.Hooks.startClient(Hooks.java:52)
+	at net.minecraft.client.MinecraftClient.<init>(MinecraftClient.java:509)
+
+-- Initialization --
+Details:
+	Modules: 
+Stacktrace:
+	at net.minecraft.client.main.Main.main(Main.java:179)
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:460)
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74)
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23)
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.19
+	Minecraft Version ID: 1.19
+	Operating System: Mac OS X (x86_64) version 12.2.1
+	Java Version: 17.0.2, Eclipse Adoptium
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Eclipse Adoptium
+	Memory: 1426302720 bytes (1360 MiB) / 2604662784 bytes (2484 MiB) up to 8589934592 bytes (8192 MiB)
+	CPUs: 10
+	Processor Vendor: Apple Inc.
+	Processor Name: Apple M1 Max
+	Identifier: Apple Inc. Family 0x1b588bb3 Model 0 Stepping 0
+	Microarchitecture: unknown
+	Frequency (GHz): 24.00
+	Number of physical packages: 1
+	Number of physical CPUs: 10
+	Number of logical CPUs: 10
+	Graphics card #0 name: Apple M1 Max
+	Graphics card #0 vendor: Apple (0x106b)
+	Graphics card #0 VRAM (MB): 0.00
+	Graphics card #0 deviceId: unknown
+	Graphics card #0 versionInfo: unknown
+	Memory slot #0 capacity (MB): 0.00
+	Memory slot #0 clockSpeed (GHz): 0.00
+	Memory slot #0 type: unknown
+	Virtual memory max (MB): 37888.00
+	Virtual memory used (MB): 21730.13
+	Swap memory total (MB): 5120.00
+	Swap memory used (MB): 3757.25
+	JVM Flags: 4 total; -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=localhost:63465,server=n,suspend=y -XX:+ShowCodeDetailsInExceptionMessages
+	Fabric Mods: 
+		architectury: Architectury 5.7.28
+		cloth-basic-math: cloth-basic-math 0.6.1
+		cloth-config: Cloth Config v6 7.0.69
+		fabric: Fabric API 0.55.2+1.19
+		fabric-api-base: Fabric API Base 0.4.8+e62f51a357
+		fabric-api-lookup-api-v1: Fabric API Lookup API (v1) 1.6.5+9ff28f4057
+		fabric-biome-api-v1: Fabric Biome API (v1) 9.0.11+e62f51a357
+		fabric-blockrenderlayer-v1: Fabric BlockRenderLayer Registration (v1) 1.1.17+9ff28f4057
+		fabric-command-api-v2: Fabric Command API (v2) 2.1.0+cda9839ba9
+		fabric-content-registries-v0: Fabric Content Registries (v0) 3.0.15+9ff28f4057
+		fabric-convention-tags-v1: Fabric Convention Tags 1.0.7+37622d2457
+		fabric-crash-report-info-v1: Fabric Crash Report Info (v1) 0.2.2+bd0a0d4aa9
+		fabric-data-generation-api-v1: Fabric Data Generation API (v1) 5.0.0+2a5b921057
+		fabric-dimensions-v1: Fabric Dimensions API (v1) 2.1.26+72da3b3da9
+		fabric-entity-events-v1: Fabric Entity Events (v1) 1.4.15+9ff28f4057
+		fabric-events-interaction-v0: Fabric Events Interaction (v0) 0.4.25+9ff28f4057
+		fabric-game-rule-api-v1: Fabric Game Rule API (v1) 1.0.18+1899036157
+		fabric-gametest-api-v1: Fabric Game Test API (v1) 1.0.29+e62f51a357
+		fabric-item-api-v1: Fabric Item API (v1) 1.5.3+767db26ea9
+		fabric-item-groups-v0: Fabric Item Groups (v0) 0.3.22+9ff28f4057
+		fabric-key-binding-api-v1: Fabric Key Binding API (v1) 1.0.17+9ff28f4057
+		fabric-lifecycle-events-v1: Fabric Lifecycle Events (v1) 2.0.8+21a5acaaa9
+		fabric-loot-api-v2: Fabric Loot API (v2) 1.0.0+9e7660c657
+		fabric-message-api-v1: Fabric Message API (v1) 1.0.0+513f4a5957
+		fabric-mining-level-api-v1: Fabric Mining Level API (v1) 2.1.6+9ff28f4057
+		fabric-models-v0: Fabric Models (v0) 0.3.14+9ff28f4057
+		fabric-networking-api-v1: Fabric Networking API (v1) 1.0.26+7fe9740957
+		fabric-object-builder-api-v1: Fabric Object Builder API (v1) 4.0.4+9ff28f4057
+		fabric-particles-v1: Fabric Particles (v1) 1.0.7+9ff28f4057
+		fabric-registry-sync-v0: Fabric Registry Sync (v0) 0.9.15+92cf9a3ea9
+		fabric-renderer-api-v1: Fabric Renderer API (v1) 1.0.7+9ff28f4057
+		fabric-renderer-indigo: Fabric Renderer - Indigo 0.6.5+9ff28f4057
+		fabric-rendering-data-attachment-v1: Fabric Rendering Data Attachment (v1) 0.3.11+9ff28f4057
+		fabric-rendering-fluids-v1: Fabric Rendering Fluids (v1) 3.0.4+9ff28f4057
+		fabric-rendering-v1: Fabric Rendering (v1) 1.10.13+9ff28f4057
+		fabric-resource-conditions-api-v1: Fabric Resource Conditions API (v1) 2.0.8+e62f51a357
+		fabric-resource-loader-v0: Fabric Resource Loader (v0) 0.5.2+9e7660c657
+		fabric-screen-api-v1: Fabric Screen API (v1) 1.0.22+9ff28f4057
+		fabric-screen-handler-api-v1: Fabric Screen Handler API (v1) 1.2.5+9ff28f4057
+		fabric-textures-v0: Fabric Textures (v0) 1.0.17+9ff28f4057
+		fabric-transfer-api-v1: Fabric Transfer API (v1) 2.0.7+e62f51a357
+		fabric-transitive-access-wideners-v1: Fabric Transitive Access Wideners (v1) 1.1.0+9e7660c657
+		fabricloader: Fabric Loader 0.14.6
+		java: OpenJDK 64-Bit Server VM 17
+		minecraft: Minecraft 1.19
+		rei-fake: THIS SHOULDN'T SHOW UP ABC
+		roughlyenoughitems: Roughly Enough Items 9.1.517
+		technicarsenal: Technic Arsenal ${version}
+	Launched Version: Fabric
+	Backend library: LWJGL version 3.3.1 SNAPSHOT
+	Backend API: Unknown
+	Window size: <not initialized>
+	GL Caps: Using framebuffer using OpenGL 3.2
+	GL debug messages: <disabled>
+	Using VBOs: Yes
+	Is Modded: Definitely; Client brand changed to 'fabric'
+	Type: Client (map_client.txt)
+	CPU: <unknown>

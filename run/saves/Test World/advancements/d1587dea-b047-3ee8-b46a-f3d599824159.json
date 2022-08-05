@@ -1,0 +1,16 @@
+{
+  "minecraft:recipes/redstone/redstone_lamp": {
+    "criteria": {
+      "has_glowstone": "2022-07-27 16:58:59 -0700"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:dripstone_caves": "2022-07-27 16:58:40 -0700",
+      "minecraft:desert": "2022-07-27 16:58:30 -0700"
+    },
+    "done": false
+  },
+  "DataVersion": 3105
+}

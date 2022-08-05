@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "polarmachinery",
+  "version": "${version}",
+
+  "name": "Polarmachinery",
+  "description": "Adds exotic, thermal-based machinery to your world!",
+  "authors": [
+    "TheSwirlingVoid"
+  ],
+  "contact": {
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/polarmachinery/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.theswirlingvoid.polarmachinery.Main"
+    ]
+  },
+  "mixins": [
+    "polarmachinery.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.6",
+    "fabric": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

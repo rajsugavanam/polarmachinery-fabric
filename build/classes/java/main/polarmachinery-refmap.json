@@ -1,0 +1,22 @@
+{
+  "mappings": {
+    "com/theswirlingvoid/polarmachinery/mixin/ItemRendererAccessor": {
+      "models": "field_4732:Lnet/minecraft/class_763;",
+      "zOffset": "field_4730:F",
+      "textureManager": "field_4729:Lnet/minecraft/class_1060;",
+      "builtinModelItemRenderer": "field_27770:Lnet/minecraft/class_756;",
+      "renderItem": "method_23179(Lnet/minecraft/class_1799;Lnet/minecraft/class_809$class_811;ZLnet/minecraft/class_4587;Lnet/minecraft/class_4597;IILnet/minecraft/class_1087;)V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "com/theswirlingvoid/polarmachinery/mixin/ItemRendererAccessor": {
+        "models": "field_4732:Lnet/minecraft/class_763;",
+        "zOffset": "field_4730:F",
+        "textureManager": "field_4729:Lnet/minecraft/class_1060;",
+        "builtinModelItemRenderer": "field_27770:Lnet/minecraft/class_756;",
+        "renderItem": "method_23179(Lnet/minecraft/class_1799;Lnet/minecraft/class_809$class_811;ZLnet/minecraft/class_4587;Lnet/minecraft/class_4597;IILnet/minecraft/class_1087;)V"
+      }
+    }
+  }
+}

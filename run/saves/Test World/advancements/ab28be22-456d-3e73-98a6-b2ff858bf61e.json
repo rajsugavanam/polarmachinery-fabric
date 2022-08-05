@@ -1,0 +1,15 @@
+{
+  "minecraft:recipes/misc/mojang_banner_pattern": {
+    "criteria": {
+      "has_enchanted_golden_apple": "2022-07-29 17:05:22 -0700"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:desert": "2022-07-29 16:26:40 -0700"
+    },
+    "done": false
+  },
+  "DataVersion": 3105
+}

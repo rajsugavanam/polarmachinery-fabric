@@ -1,0 +1,11 @@
+{
+	"item.polarmachinery.applicator": "§eApplicator",
+	"tooltip.applicator.desc": "A wand with a flair of magic–only if you let it have one.",
+
+	"item.polarmachinery.transformation_crystal": "§aTransformation Crystal",
+	"tooltip.transformation_crystal.desc": "An uncommon crystal that was fairly common for its times.",
+	
+	"block.polarmachinery.thermal_pipe": "Thermal Pipe",
+	"tooltip.thermal_pipe.desc": "A hot staple of modern engineering. Many think it's cool."
+	
+}

@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -21,14 +22,24 @@ public abstract class BaseConfiguration {
 
 	protected String instancePath;
 	protected List<String> instanceDataPathNames = new ArrayList<>();
+	private World world;
 
 	public BaseConfiguration(World world)
 	{
-		MOD_CONFIG_DIR = world.getServer().getSavePath(WorldSavePath.ROOT).resolve(Main.MOD_ID).toString();
+		this.world = world;
+		MOD_CONFIG_DIR = world.getServer().getSavePath(WorldSavePath.ROOT).normalize().resolve(Main.MOD_ID).toString();
 		// a subclass will call this when created
 		// subclasses of this do not need their own constructor
 		setBasePath();
 		addConfigurationFiles();
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 	// does not take an absolute path. takes a directory path starting from the config path.
@@ -59,7 +70,7 @@ public abstract class BaseConfiguration {
 				if (!configFile.exists())
 				{
 					configFile.createNewFile();
-					
+
 					/* ----------------------------- Write To Files ----------------------------- */
 					// writeInitialFile(configFile);
 					/* -------------------------------------------------------------------------- */
@@ -111,12 +122,16 @@ public abstract class BaseConfiguration {
 
 	public void writeJSONEntryToFile(File configFile, String key, Object value)
 	{
-		try {
-			JSONObject currentJson = readAllJSONFromFile(configFile);
-			currentJson.accumulate(key, value);
+		JSONObject currentJson = readAllJSONFromFile(configFile);
+		currentJson.accumulate(key, value);
+		overwriteJSONToFile(configFile, currentJson);
+	}
 
+	public void overwriteJSONToFile(File configFile, JSONObject obj)
+	{
+		try {
 			FileWriter writer = new FileWriter(configFile);
-			currentJson.write(writer);
+			obj.write(writer);
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -160,7 +175,7 @@ public abstract class BaseConfiguration {
 	// 	} catch (Exception e) {
 	// 		e.printStackTrace();
 	// 	}
-		
+
 	// }
 
 	public JSONObject readAllJSONFromFile(File configFile)
@@ -174,15 +189,15 @@ public abstract class BaseConfiguration {
 		}
 	}
 
-	public Object getValueFromFile(File configFile, String key)
+	public Optional<Object> getValueFromFile(File configFile, String key)
 	{
 		try {
-			JSONObject obj = new JSONObject(new JSONTokener(new FileInputStream(configFile)));
-			return obj.get(key);
+			JSONObject obj = readAllJSONFromFile(configFile);
+			return Optional.of(obj.get(key));
 		} catch (Exception e) {
 			e.printStackTrace();
 			// if the file wasn't found, it'll end up here
-			return JSONObject.NULL;
+			return Optional.empty();
 		}
 	}
 
@@ -235,4 +250,5 @@ public abstract class BaseConfiguration {
 	public static String getModConfigDir() {
 		return MOD_CONFIG_DIR;
 	}
+
 }

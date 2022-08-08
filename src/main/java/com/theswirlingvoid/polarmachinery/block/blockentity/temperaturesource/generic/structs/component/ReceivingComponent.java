@@ -5,7 +5,7 @@ import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.ge
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.structs.context.TemperatureStorage;
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.temperatureinterface.ITemperatureReceiver;
 
-public class ReceivingComponent extends PolarizedMachine implements ITemperatureReceiver {
+public class ReceivingComponent extends PolarStorageComponent implements ITemperatureReceiver {
 
 	public ReceivingComponent(TemperatureType type, float maxTemperature) {
 		super(type, maxTemperature);
@@ -19,17 +19,17 @@ public class ReceivingComponent extends PolarizedMachine implements ITemperature
 
 	@Override
 	public TemperatureType getTemperatureType() {
-		return temperatureType;
+		return super.getTempType();
 	}
 
 	@Override
 	public void receiveTemperature(float temperature) {
-		//TODO: IMPLEMENT
+		super.getTempStorage().setCurrentTemperature(temperature);
 	}
 
 	@Override
 	public OperationStrengthContext getOperationStrengthContext() {
-		return strengthContext;
+		return super.getStrengthContext();
 	}
 	
 }

@@ -97,7 +97,7 @@ public class ApplicatorScreenHandler extends ScreenHandler {
 	{
 		return new SimpleNamedScreenHandlerFactory(
 			(syncId, playerInventory, ent) -> new ApplicatorScreenHandler(syncId, playerInventory, ent, boundItem),
-			Text.of("Test")
+			Text.of("Applicator Items")
 		);
 	}
 

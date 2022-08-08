@@ -1,4 +1,4 @@
-package com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.hot;
+package com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.hot.blockentity;
 
 import com.theswirlingvoid.polarmachinery.Main;
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.enums.TemperatureType;
@@ -14,7 +14,7 @@ public class BurnerBlockEntity extends GeneratingMachine {
 	private static final TemperatureType TEMPERATURE_TYPE = TemperatureType.HOT;
 
 	public BurnerBlockEntity(BlockPos pos, BlockState state) {
-		super(TemperatureType.HOT, MAX_TEMP, pos, state);
+		super(TEMPERATURE_TYPE, MAX_TEMP, pos, state);
 	}
 
 	public static Identifier getIdentifier()

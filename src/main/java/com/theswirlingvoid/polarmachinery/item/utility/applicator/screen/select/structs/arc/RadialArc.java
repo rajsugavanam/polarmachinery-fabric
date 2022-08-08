@@ -203,8 +203,6 @@ public class RadialArc {
 
 		float pushoutDist = animationCompletion*(getOffsetOuterRadius()-getOffsetInnerRadius());
 
-		System.out.println(client.currentScreen.height);
-
 		// from normalized vec,
 		// 	inner corner multiplier = offsetInnerRadius*elapsedSelectMult
 		//  outer corner multiplier = (offsetInnerRadius+radiusDist)*elapsedSelectMult

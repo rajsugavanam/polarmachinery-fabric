@@ -2,6 +2,6 @@ package com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.g
 
 public interface ITemperatureProvider extends ITemperatureStorage, IOperationStrengthContext {
 
-	public float provideTemperature();
+	public float provideTemperature(int pipes);
 	
 }

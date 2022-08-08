@@ -35,7 +35,6 @@ public class ThermalPipeLocator {
 
 	/**
 	 * Gets the positions of allowed pipe blocks immediately next to a coordinate in world.
-	 * @param world the world that the coordinate is in
 	 * @param thisPos the position to search around
 	 * @return the list of found blocks
 	 */

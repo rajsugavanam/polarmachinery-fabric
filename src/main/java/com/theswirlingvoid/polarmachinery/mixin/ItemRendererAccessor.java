@@ -29,5 +29,5 @@ public interface ItemRendererAccessor {
 	BuiltinModelItemRenderer getBuiltinModelItemRenderer();
 
     @Invoker("renderItem")
-    public void invokeRenderItem(ItemStack stack, Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model);
+    void invokeRenderItem(ItemStack stack, Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model);
 }

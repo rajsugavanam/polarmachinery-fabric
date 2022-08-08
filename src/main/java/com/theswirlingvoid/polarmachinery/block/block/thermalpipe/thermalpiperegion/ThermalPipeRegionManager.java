@@ -1,19 +1,23 @@
 package com.theswirlingvoid.polarmachinery.block.block.thermalpipe.thermalpiperegion;
 
 import java.io.File;
-import java.util.Set;
+import java.util.Optional;
 
+import com.theswirlingvoid.polarmachinery.block.block.thermalpipe.PipeNetwork;
 import com.theswirlingvoid.polarmachinery.configuration.thermalpipe.ThermalPipeConfiguration;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.json.JSONObject;
 
 public class ThermalPipeRegionManager {
 
 	public static ThermalPipeConfiguration config;
+	private final World world;
 
 	public ThermalPipeRegionManager(World world)
 	{
+		this.world = world;
 		config = new ThermalPipeConfiguration(world);
 	}
 
@@ -37,11 +41,10 @@ public class ThermalPipeRegionManager {
 
 	// }
 
-	public static void createNewRegion(World world, BlockPos pos)
+	public void saveNetwork(PipeNetwork network)
 	{
-		File newFile = config.createNewNetworkFile(world);
-		
-		config.writeJSONEntryToFile(newFile, ThermalPipeConfiguration.NETWORK_KEY, config.posToLongSetElement(pos));
+		File newFile = config.createNewNetworkFile(network.getNetworkWorld());
+		config.overwriteJSONToFile(newFile, network.toJSON());
 	}
 
 	// public static void appendToNetwork(World world, BlockPos pos, int id)
@@ -51,12 +54,14 @@ public class ThermalPipeRegionManager {
 	// 	config.writeJSONEntryToFile(configFile, ThermalPipeConfiguration.NETWORK_KEY, config.posToLongSetElement(pos));
 	// }
 
-	public static ThermalPipeRegion readNetwork(World world, int id)
+	public Optional<File> readNetworkMatchingPipe(BlockPos pos)
 	{
-		File regFile = config.getNetworkFileFromID(world, id);
-		Set<Long> positions = (Set<Long>) config.getValueFromFile(regFile, ThermalPipeConfiguration.NETWORK_KEY);
+		return config.matchPipeEndToFile(world, pos);
+	}
 
-		return new ThermalPipeRegion(positions);
+	public void deleteRegionsIncludingPipe(BlockPos pos)
+	{
+		config.deleteFileWithMatchingPipe(world, pos);
 	}
 
 	// public static Set<ThermalPipeRegion> getAdjacentRegions(World world, BlockPos pos)

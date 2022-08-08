@@ -3,23 +3,43 @@ package com.theswirlingvoid.polarmachinery.block.block.thermalpipe;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.structs.component.PolarStorageComponent;
+import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.structs.machine.IPipeMachine;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONPropertyName;
 
 public class PipeNetwork {
 	private Set<BlockPos> pipeBlocks;
 	private Set<BlockPos> connectionEndings;
+	private final World networkWorld;
 
 	private static final float DROPOFF_CLOSENESS = 1.18f;
 	private static final float DROPOFF_SLOWNESS = 30f;
 
-	public PipeNetwork() {
+	public static final String PIPE_BLOCKS_KEY = "PipeBlocks";
+	public static final String CONNECTION_ENDINGS_KEY = "ConnectionEndings";
+	public static final String TOTAL_PIPES_KEY = "TotalPipes";
+	public static final String TOTAL_HEAT_KEY = "TotalHeat";
+	public static final String NETWORK_WORLD_KEY = "NetworkWorld";
+
+	public PipeNetwork(World world) {
 		this.pipeBlocks = new HashSet<>();
 		this.connectionEndings = new HashSet<>();
+		this.networkWorld = world;
 	}
 
+	public void removePipeBlock(BlockPos pos)
+	{
+		this.pipeBlocks.remove(pos);
+	}
 
-	@JSONPropertyName("PipeBlocks")
+	public World getNetworkWorld() {
+		return networkWorld;
+	}
+
 	public Set<BlockPos> getPipeBlocks() {
 		return pipeBlocks;
 	}
@@ -30,7 +50,6 @@ public class PipeNetwork {
 		this.pipeBlocks.add(blockPos);
 	}
 
-	@JSONPropertyName("ConnectionEndings")
 	public Set<BlockPos> getConnectionEndings() {
 		return connectionEndings;
 	}
@@ -41,32 +60,52 @@ public class PipeNetwork {
 		this.connectionEndings.add(blockPos);
 	}
 
-	@JSONPropertyName("TotalPipes")
 	public int getTotalNumPipes()
 	{
 		return this.pipeBlocks.size();
 	}
 
 	/* ------------------------------- HEAT STUFF ------------------------------- */
-	@JSONPropertyName("TotalHeat")
 	public float getTotalHeat()
 	{
-		/**
-		 * TODO: IMPLEMENT
-		 * CHECK IF THE BLOCK POSITIONS FOR EACH CONNECTION ENDING ARE HEAT/COLD SOURCES,
-		 * AND SUM UP THEIR HEAT VALUE IF SO. IF THEY'RE NOT HEAT/COLD SOURCES, MAKE ITS HEAT VALUE NEUTRAL, THAT BEING 0
-		 **/
-		return 0;
+		float totalHeat = 0;
+		for (BlockPos pos : connectionEndings)
+		{
+			if (networkWorld.getBlockEntity(pos) instanceof IPipeMachine pipeMachine)
+			{
+				PolarStorageComponent storageComponent = pipeMachine.getStorageComponent();
+				if (storageComponent != null)
+					totalHeat = totalHeat+storageComponent.getTempStorage().getCurrentTemperature();
+			}
+		}
+		return totalHeat;
 	}
 
-	public float performHeatEquation(float temp, int pipes)
+	public static float performHeatEquation(float temp, int pipes)
 	{
-		//here's the equation on desmos if you're comfortable with a little calculus!
+		// here's the equation on desmos if you're comfortable with a little calculus!
 		// d is dropoff closeness, s is dropoff slowness
-		//https://www.desmos.com/calculator/e8o7qvjktz
-		return (float) (temp-(
-						Math.pow( temp, 1/(Math.pow(DROPOFF_CLOSENESS, 1/5f)) )
-						*Math.tanh(pipes/DROPOFF_SLOWNESS)
-				));
+		// https://www.desmos.com/calculator/4nahvrgcwy
+		return (float) (
+				temp-((temp/DROPOFF_CLOSENESS) *Math.tanh(pipes/DROPOFF_SLOWNESS))
+		);
+	}
+
+	public JSONObject toJSON()
+	{
+		JSONObject obj = new JSONObject();
+
+		// just so that single blocks are still arrays
+		obj.put(PIPE_BLOCKS_KEY, new JSONArray());
+		obj.put(CONNECTION_ENDINGS_KEY, new JSONArray());
+
+		getPipeBlocks().forEach((bp) -> obj.accumulate(PIPE_BLOCKS_KEY, bp.asLong()));
+		getConnectionEndings().forEach((ce) -> obj.accumulate(CONNECTION_ENDINGS_KEY, ce.asLong()));
+
+		obj
+			.put(TOTAL_PIPES_KEY, getTotalNumPipes())
+			.put(TOTAL_HEAT_KEY, getTotalHeat());
+
+		return obj;
 	}
 }

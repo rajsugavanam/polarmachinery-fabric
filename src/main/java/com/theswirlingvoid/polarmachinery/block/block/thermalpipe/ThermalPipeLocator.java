@@ -12,19 +12,20 @@ import net.minecraft.world.World;
 
 public class ThermalPipeLocator {
 	
-	private PipeNetwork network;
-	private BlockPos ultimateOriginPos;
+	private final PipeNetwork network;
+	private final BlockPos ultimateOriginPos;
 
-	private Block originalBlock;
+	private final Block originalBlock;
 
-	private Block sourceBlockAfterUpdate;
+	private final Block sourceBlockAfterUpdate;
 
-	private boolean pipeBroken;
+	private final boolean pipeBroken;
 
-	private World world;
+	private final World world;
 
+	// a network is defined as a chain of pipes containing TWO OR MORE.
 	public ThermalPipeLocator(World world, BlockPos originPos, Block originalBlock) {
-		this.network = new PipeNetwork();
+		this.network = new PipeNetwork(world);
 		this.ultimateOriginPos = originPos;
 		this.world = world;
 		this.originalBlock = originalBlock;
@@ -33,12 +34,17 @@ public class ThermalPipeLocator {
 		this.pipeBroken = (sourceBlockAfterUpdate != originalBlock && ValidPipeBlocks.isValidPipeBlock(originalBlock));
 	}
 
+	public BlockPos getUltimateOriginPos()
+	{
+		return ultimateOriginPos;
+	}
+
 	/**
 	 * Gets the positions of allowed pipe blocks immediately next to a coordinate in world.
 	 * @param thisPos the position to search around
 	 * @return the list of found blocks
 	 */
-	private Set<BlockPos> getSurroundingPipePositions(BlockPos thisPos)
+	private Set<BlockPos> getSavedSurroundingPositions(BlockPos thisPos)
 	{
 		Set<BlockPos> finalPositions = new HashSet<>();
 
@@ -52,16 +58,16 @@ public class ThermalPipeLocator {
 		return finalPositions;
 	}
 
-	private Set<BlockPos> getInitialPositions(BlockPos thisPos)
+	private Set<BlockPos> getUnsavedSurroundingPositions(BlockPos thisPos)
 	{
 		Set<BlockPos> finalPositions = new HashSet<>();
 
-		initialBlockCheck(finalPositions, thisPos.up());
-		initialBlockCheck(finalPositions, thisPos.down());
-		initialBlockCheck(finalPositions, thisPos.north());
-		initialBlockCheck(finalPositions, thisPos.east());
-		initialBlockCheck(finalPositions, thisPos.south());
-		initialBlockCheck(finalPositions, thisPos.west());
+		localBlockCheck(finalPositions, thisPos.up());
+		localBlockCheck(finalPositions, thisPos.down());
+		localBlockCheck(finalPositions, thisPos.north());
+		localBlockCheck(finalPositions, thisPos.east());
+		localBlockCheck(finalPositions, thisPos.south());
+		localBlockCheck(finalPositions, thisPos.west());
 
 		return finalPositions;
 	}
@@ -69,7 +75,7 @@ public class ThermalPipeLocator {
 	private void snakeSearchPositions(BlockPos thisPos)
 	{
 
-		Set<BlockPos> positions = getSurroundingPipePositions(thisPos);
+		Set<BlockPos> positions = getSavedSurroundingPositions(thisPos);
 
 		for (BlockPos pos : positions)
 		{
@@ -81,43 +87,40 @@ public class ThermalPipeLocator {
 	{
 
 		List<PipeNetwork> finalNetworks = new ArrayList<>();
-		// if anything substantial changed, meaning;
 
-		// a) if an update to a pipe block severed a network
-		// b) if any machine/connection end was broken or placed
-		// c) if two networks were attempted to be joined together or two+
-		//    pipes were connected
+		Set<BlockPos> initialAffected = this.getUnsavedSurroundingPositions(ultimateOriginPos);
 
-		// if (isUpdateWorthyOfRecurse())
-		// {
 
-			// this means a network was split in two! see if statement above!
-			if (pipeBroken)
-			{
-				return findNetworksAfterBreak();
-			}
-
-			if (ValidPipeBlocks.isValidPipeBlock(sourceBlockAfterUpdate))
-				this.network.addPipeBlock(ultimateOriginPos);
-			else if (ValidPipeBlocks.isValidConnectionEnd(sourceBlockAfterUpdate))
-				this.network.addConnectionEnding(ultimateOriginPos);
-
+		if (pipeBroken && moreThan1Affected(initialAffected))
+		{
+			finalNetworks.addAll(findNetworksAfterBreak());
+		} else
+		{
 			snakeSearchPositions(this.ultimateOriginPos);
+			if (!pipeBroken)
+				this.network.addPipeBlock(this.ultimateOriginPos);
 			finalNetworks.add(this.network);
-
-		// }
+		}
 		
 		
 		return finalNetworks;
 
 	}
 
+	public Set<BlockPos> getImmediatePipeBlocks()
+	{
+		// new locator to not affect the data of this instance
+		ThermalPipeLocator localLocator = new ThermalPipeLocator(this.world, this.ultimateOriginPos, this.originalBlock);
+		localLocator.getSavedSurroundingPositions(this.ultimateOriginPos); // this actually adds it in to the network blocks
+
+		return localLocator.network.getPipeBlocks();
+	}
 	
 	private List<PipeNetwork> findNetworksAfterBreak()
 	{
 		List<PipeNetwork> splitNetworks = new ArrayList<>();
 		
-		Set<BlockPos> surroundingPositions = getInitialPositions(ultimateOriginPos);
+		Set<BlockPos> surroundingPositions = getUnsavedSurroundingPositions(ultimateOriginPos);
 		
 		for (BlockPos subPos : surroundingPositions)
 		{
@@ -145,7 +148,8 @@ public class ThermalPipeLocator {
 	// this will only on a pipe affected by an adjacent broken pipe!
 	private PipeNetwork recurseAfterSever()
 	{
-		this.network.addPipeBlock(ultimateOriginPos);
+		// we add a pipe position here because it would have nothing to do with the original update.
+		network.addPipeBlock(this.ultimateOriginPos);
 		snakeSearchPositions(this.ultimateOriginPos);
 		return this.network;
 	}
@@ -188,7 +192,7 @@ public class ThermalPipeLocator {
 	}
 
 	//! THIS IS FOR getInitialPositions()!
-	private void initialBlockCheck(Set<BlockPos> localCheckedPipePositions, BlockPos pos)
+	private void localBlockCheck(Set<BlockPos> localCheckedPipePositions, BlockPos pos)
 	{
 		Block checkedBlock = world.getBlockState(pos).getBlock();
 
@@ -200,12 +204,11 @@ public class ThermalPipeLocator {
 
 	private boolean isUpdateWorthyOfRecurse()
 	{
-		Set<BlockPos> immPositions = getInitialPositions(ultimateOriginPos);
-		boolean worthy = (
+		Set<BlockPos> immPositions = getUnsavedSurroundingPositions(ultimateOriginPos);
+		return (
 			wasPipeEndModified(immPositions)
 			|| moreThan1Affected(immPositions)
 			);
-		return worthy;
 	}
 
 	private boolean wasPipeEndModified(Set<BlockPos> immPositions)

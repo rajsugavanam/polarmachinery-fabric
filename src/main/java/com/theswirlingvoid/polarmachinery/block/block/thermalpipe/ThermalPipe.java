@@ -6,6 +6,7 @@ import java.util.List;
 import com.theswirlingvoid.polarmachinery.Main;
 import com.theswirlingvoid.polarmachinery.block.ModBlocks;
 
+import com.theswirlingvoid.polarmachinery.block.block.thermalpipe.thermalpiperegion.ThermalPipeRegionManager;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -68,14 +69,14 @@ public class ThermalPipe extends Block {
 
 	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-		
+
+		deleteLonelyPipe(world, pos, world.getBlockState(pos).getBlock());
 		super.onBreak(world, pos, state, player);
 	}
 
 	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
 
-		
 		super.onPlaced(world, pos, state, placer, itemStack);
 	}
 
@@ -84,26 +85,56 @@ public class ThermalPipe extends Block {
 			boolean notify) {
 				
 
-		// ThermalPipeRegionManager.addWorldToData(world);
 		if (!world.isClient) 
 		{
 
 
 			ThermalPipeLocator locator = new ThermalPipeLocator(world, sourcePos, sourceBlock);
 			List<PipeNetwork> foundNetworks = locator.findPipeNetworks();
+			ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
 
-			// meaning the network was split in 2
-			if (foundNetworks.size() > 0)
+			// deletes every possible old network
+			for (BlockPos possibleNetworkPos : locator.getImmediatePipeBlocks())
 			{
-				for (int index = 0; index<foundNetworks.size(); index++)
-				{
-					foundNetworks.get(index).getConnectionEndings();
-				}
+				regionManager.deleteRegionsIncludingPipe(possibleNetworkPos);
 			}
+
+			for (PipeNetwork network : foundNetworks)
+			{
+				regionManager.saveNetwork(network);
+			}
+
 		}
 
 		super.neighborUpdate(state, world, originalPos, sourceBlock, sourcePos, notify);
 	}
+
+	private void deleteLonelyPipe(World world, BlockPos pos, Block sourceBlock)
+	{
+		if (!world.isClient)
+		{
+			ThermalPipeLocator locator = new ThermalPipeLocator(world, pos, sourceBlock);
+			// only a single pipe was involved
+			if (locator.getImmediatePipeBlocks().size() == 0)
+			{
+				ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
+				regionManager.deleteRegionsIncludingPipe(pos);
+			}
+		}
+	}
+
+//	private void addLonelyPipe(World world, BlockPos pos, Block sourceBlock)
+//	{
+//		ThermalPipeLocator locator = new ThermalPipeLocator(world, pos, sourceBlock);
+//		// only a single pipe was involved
+//		if (locator.getImmediateValidBlocks().size() == 0)
+//		{
+//			ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
+//			PipeNetwork newNetwork = new PipeNetwork(world);
+//			newNetwork.addPipeBlock(pos);
+//			regionManager.saveNetwork(newNetwork);
+//		}
+//	}
 
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {

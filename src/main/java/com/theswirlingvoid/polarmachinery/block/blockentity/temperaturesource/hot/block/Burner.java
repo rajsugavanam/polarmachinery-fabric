@@ -6,6 +6,7 @@ import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.ge
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.hot.blockentity.BurnerBlockEntity;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
@@ -32,6 +33,11 @@ public class Burner extends PipeConnectionEndBlockWithEntity {
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
 		return new BurnerBlockEntity(pos, state);
+	}
+
+	@Override
+	public BlockRenderType getRenderType(BlockState state) {
+		return BlockRenderType.MODEL;
 	}
 
 	public static Settings getSettings()

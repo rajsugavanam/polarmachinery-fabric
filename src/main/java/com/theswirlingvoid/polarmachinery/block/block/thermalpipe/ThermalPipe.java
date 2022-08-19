@@ -77,6 +77,7 @@ public class ThermalPipe extends Block {
 	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
 
+		addLonelyPipe(world, pos, world.getBlockState(pos).getBlock());
 		super.onPlaced(world, pos, state, placer, itemStack);
 	}
 
@@ -123,18 +124,21 @@ public class ThermalPipe extends Block {
 		}
 	}
 
-//	private void addLonelyPipe(World world, BlockPos pos, Block sourceBlock)
-//	{
-//		ThermalPipeLocator locator = new ThermalPipeLocator(world, pos, sourceBlock);
-//		// only a single pipe was involved
-//		if (locator.getImmediateValidBlocks().size() == 0)
-//		{
-//			ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
-//			PipeNetwork newNetwork = new PipeNetwork(world);
-//			newNetwork.addPipeBlock(pos);
-//			regionManager.saveNetwork(newNetwork);
-//		}
-//	}
+	private void addLonelyPipe(World world, BlockPos pos, Block sourceBlock)
+	{
+		if (!world.isClient)
+		{
+			ThermalPipeLocator locator = new ThermalPipeLocator(world, pos, sourceBlock);
+			// only a single pipe was involved
+			if (locator.getImmediatePipeBlocks().size() == 0)
+			{
+				ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
+				PipeNetwork newNetwork = new PipeNetwork(world);
+				newNetwork.addPipeBlock(pos);
+				regionManager.saveNetwork(newNetwork);
+			}
+		}
+	}
 
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {

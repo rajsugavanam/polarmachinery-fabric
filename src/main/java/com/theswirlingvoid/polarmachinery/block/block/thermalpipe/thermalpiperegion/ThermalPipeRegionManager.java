@@ -1,14 +1,12 @@
 package com.theswirlingvoid.polarmachinery.block.block.thermalpipe.thermalpiperegion;
 
-import java.io.File;
-import java.util.Optional;
-
 import com.theswirlingvoid.polarmachinery.block.block.thermalpipe.PipeNetwork;
 import com.theswirlingvoid.polarmachinery.configuration.thermalpipe.ThermalPipeConfiguration;
-
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.json.JSONObject;
+
+import java.io.File;
+import java.util.Optional;
 
 public class ThermalPipeRegionManager {
 
@@ -63,26 +61,4 @@ public class ThermalPipeRegionManager {
 	{
 		config.deleteFileWithMatchingPipe(world, pos);
 	}
-
-	// public static Set<ThermalPipeRegion> getAdjacentRegions(World world, BlockPos pos)
-	// {
-
-	// }
-
-
-
-	// public static ArrayList<ThermalPipeRegion> getAdjacentPipeRegions(World world, ArrayList<BlockPos> positionsToCheck)
-	// {
-	// 	if (!world.isClient){
-	// 		List<File> files = config.getConfigurationFiles();
-
-	// 		File[] dimensionRegions = ThermalPipeConfiguration.getDimensionRegionFiles(world);
-
-	// 		for (File regionFile : dimensionRegions)
-	// 		{
-
-	// 			// ThermalPipeConfiguration.readAllJsonFromFile(regionFile);
-	// 		}
-	// 	}
-	// }
 }

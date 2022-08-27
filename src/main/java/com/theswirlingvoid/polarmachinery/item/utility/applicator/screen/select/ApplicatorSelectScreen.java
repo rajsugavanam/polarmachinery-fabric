@@ -94,7 +94,7 @@ public class ApplicatorSelectScreen extends Screen {
 		// fadeBackground(positionMatrix);
 		/* -------------------------------------------------------------------------- */
 
-		ItemStack selectedItem = ItemStack.EMPTY;
+		ItemStack selectedItem;
 		Text centerText = Text.literal("None").setStyle(Style.EMPTY.withColor(Formatting.WHITE));
 		if (selectedArc != -1)
 		{

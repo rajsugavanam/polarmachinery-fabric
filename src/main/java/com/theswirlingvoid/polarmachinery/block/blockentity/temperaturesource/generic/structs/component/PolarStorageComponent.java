@@ -3,11 +3,11 @@ package com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.g
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.enums.TemperatureType;
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.structs.context.OperationStrengthContext;
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.structs.context.TemperatureStorage;
+import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.temperatureinterface.ITemperatureStorage;
 
-public abstract class PolarStorageComponent {
+public class PolarStorageComponent implements ITemperatureStorage {
 	private final TemperatureType tempType;
 	private final TemperatureStorage tempStorage;
-	private final OperationStrengthContext strengthContext = new OperationStrengthContext();
 
 	public PolarStorageComponent(TemperatureType type, float maxTemperature)
 	{
@@ -15,15 +15,13 @@ public abstract class PolarStorageComponent {
 		this.tempStorage = new TemperatureStorage(0, maxTemperature);
 	}
 
-	public TemperatureType getTempType() {
+	@Override
+	public TemperatureType getTemperatureType() {
 		return tempType;
 	}
 
-	public TemperatureStorage getTempStorage() {
+	@Override
+	public TemperatureStorage getTemperatureStorage() {
 		return tempStorage;
-	}
-
-	public OperationStrengthContext getStrengthContext() {
-		return strengthContext;
 	}
 }

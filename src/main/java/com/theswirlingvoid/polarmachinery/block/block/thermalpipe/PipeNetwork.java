@@ -75,7 +75,7 @@ public class PipeNetwork {
 			{
 				PolarStorageComponent storageComponent = pipeMachine.getStorageComponent();
 				if (storageComponent != null)
-					totalHeat = totalHeat+storageComponent.getTempStorage().getCurrentTemperature();
+					totalHeat = totalHeat+storageComponent.getTemperatureStorage().getCurrentTemperature();
 			}
 		}
 		return totalHeat;

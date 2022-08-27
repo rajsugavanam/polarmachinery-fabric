@@ -6,7 +6,7 @@ import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.ge
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.structs.machine.MachineEquations;
 import com.theswirlingvoid.polarmachinery.block.blockentity.temperaturesource.generic.temperatureinterface.ITemperatureProvider;
 
-public class GeneratingComponent extends PolarStorageComponent implements ITemperatureProvider {
+public class GeneratingComponent extends StrengthComponent implements ITemperatureProvider {
 
 
 	public GeneratingComponent(TemperatureType type, float maxTemperature) {
@@ -16,30 +16,15 @@ public class GeneratingComponent extends PolarStorageComponent implements ITempe
 	@Override
 	public float provideTemperature(int pipes) {
 		float tempToProvide = MachineEquations.tempProvideEquation(
-				super.getTempStorage().getCurrentTemperature(),
-				super.getStrengthContext().getOperationStrength()
+				super.getTemperatureStorage().getCurrentTemperature(),
+				super.getOperationStrengthContext().getOperationStrength()
 		);
 		// subtract the provided temp from the storage
-		super.getTempStorage().setCurrentTemperature(
-				this.getTempStorage().getCurrentTemperature()-tempToProvide
+		super.getTemperatureStorage().setCurrentTemperature(
+				this.getTemperatureStorage().getCurrentTemperature()-tempToProvide
 		);
 
 		return tempToProvide;
-	}
-
-	@Override
-	public TemperatureType getTemperatureType() {
-		return super.getTempType();
-	}
-
-	@Override
-	public TemperatureStorage getTemperatureStorage() {
-		return super.getTempStorage();
-	}
-
-	@Override
-	public OperationStrengthContext getOperationStrengthContext() {
-		return super.getStrengthContext();
 	}
 	
 }

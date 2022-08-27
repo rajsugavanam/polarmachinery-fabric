@@ -70,14 +70,16 @@ public class ThermalPipe extends Block {
 	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 
-		deleteLonelyPipe(world, pos, world.getBlockState(pos).getBlock());
+//		deleteLonelyPipe(world, pos, world.getBlockState(pos).getBlock());
+		new ThermalPipeUpdateHandler(world, pos, world.getBlockState(pos).getBlock()).deleteLonelyPipe();
 		super.onBreak(world, pos, state, player);
 	}
 
 	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
 
-		addLonelyPipe(world, pos, world.getBlockState(pos).getBlock());
+//		addLonelyPipe(world, pos, world.getBlockState(pos).getBlock());
+		new ThermalPipeUpdateHandler(world, pos, world.getBlockState(pos).getBlock()).addLonelyPipe();
 		super.onPlaced(world, pos, state, placer, itemStack);
 	}
 
@@ -86,59 +88,59 @@ public class ThermalPipe extends Block {
 			boolean notify) {
 				
 
-		if (!world.isClient) 
-		{
-
-
-			ThermalPipeLocator locator = new ThermalPipeLocator(world, sourcePos, sourceBlock);
-			List<PipeNetwork> foundNetworks = locator.findPipeNetworks();
-			ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
-
-			// deletes every possible old network
-			for (BlockPos possibleNetworkPos : locator.getImmediatePipeBlocks())
-			{
-				regionManager.deleteRegionsIncludingPipe(possibleNetworkPos);
-			}
-
-			for (PipeNetwork network : foundNetworks)
-			{
-				regionManager.saveNetwork(network);
-			}
-
-		}
-
+//		if (!world.isClient)
+//		{
+//
+//
+//			ThermalPipeLocator locator = new ThermalPipeLocator(world, sourcePos, sourceBlock);
+//			List<PipeNetwork> foundNetworks = locator.findPipeNetworks();
+//			ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
+//
+//			// deletes every possible old network
+//			for (BlockPos possibleNetworkPos : locator.getImmediatePipeBlocks())
+//			{
+//				regionManager.deleteRegionsIncludingPipe(possibleNetworkPos);
+//			}
+//
+//			for (PipeNetwork network : foundNetworks)
+//			{
+//				regionManager.saveNetwork(network);
+//			}
+//
+//		}
+		new ThermalPipeUpdateHandler(world, sourcePos, sourceBlock).neighborUpdate();
 		super.neighborUpdate(state, world, originalPos, sourceBlock, sourcePos, notify);
 	}
 
-	private void deleteLonelyPipe(World world, BlockPos pos, Block sourceBlock)
-	{
-		if (!world.isClient)
-		{
-			ThermalPipeLocator locator = new ThermalPipeLocator(world, pos, sourceBlock);
-			// only a single pipe was involved
-			if (locator.getImmediatePipeBlocks().size() == 0)
-			{
-				ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
-				regionManager.deleteRegionsIncludingPipe(pos);
-			}
-		}
-	}
-
-	private void addLonelyPipe(World world, BlockPos pos, Block sourceBlock)
-	{
-		if (!world.isClient)
-		{
-			ThermalPipeLocator locator = new ThermalPipeLocator(world, pos, sourceBlock);
-			// only a single pipe was involved
-			if (locator.getImmediatePipeBlocks().size() == 0)
-			{
-				ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
-				PipeNetwork newNetwork = new PipeNetwork(world);
-				newNetwork.addPipeBlock(pos);
-				regionManager.saveNetwork(newNetwork);
-			}
-		}
-	}
+//	private void deleteLonelyPipe(World world, BlockPos pos, Block sourceBlock)
+//	{
+//		if (!world.isClient)
+//		{
+//			ThermalPipeLocator locator = new ThermalPipeLocator(world, pos, sourceBlock);
+//			// only a single pipe was involved
+//			if (locator.getImmediatePipeBlocks().size() == 0)
+//			{
+//				ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
+//				regionManager.deleteRegionsIncludingPipe(pos);
+//			}
+//		}
+//	}
+//
+//	private void addLonelyPipe(World world, BlockPos pos, Block sourceBlock)
+//	{
+//		if (!world.isClient)
+//		{
+//			ThermalPipeLocator locator = new ThermalPipeLocator(world, pos, sourceBlock);
+//			// only a single pipe was involved
+//			if (locator.getImmediatePipeBlocks().size() == 0)
+//			{
+//				ThermalPipeRegionManager regionManager = new ThermalPipeRegionManager(world);
+//				PipeNetwork newNetwork = new PipeNetwork(world);
+//				newNetwork.addPipeBlock(pos);
+//				regionManager.saveNetwork(newNetwork);
+//			}
+//		}
+//	}
 
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {

@@ -6,6 +6,9 @@
 	"tooltip.transformation_crystal.desc": "An uncommon crystal that was fairly common for its times.",
 	
 	"block.polarmachinery.thermal_pipe": "Thermal Pipe",
-	"tooltip.thermal_pipe.desc": "A hot staple of modern engineering. Many think it's cool."
-	
+	"tooltip.thermal_pipe.desc": "A hot staple of modern engineering. Many think it's cool.",
+
+	"block.polarmachinery.burner": "Burner",
+	"tooltip.burner.desc": "Using this is easier than starting a forest fire."
+
 }
